@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Convert WebP to PNG with Exact Size</title>
+  </head>
+  <body>
+  
+    <h1>WebP to PNG Converter</h1>
+    <input type="file" id="file-input">
+    <br><br>
+    <button onclick="convertToPNG()">Convert to PNG</button>
+    <br><br>
+    <canvas id="canvas"></canvas>
+    <a id="download-link" download="converted.png" style="display:none">Download</a>
+    
+    <script>
+      function convertToPNG() {
+        let fileInput = document.getElementById("file-input");
+        let canvas = document.getElementById("canvas");
+        let downloadLink = document.getElementById("download-link");
+        
+        if (fileInput.files && fileInput.files[0]) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            let img = new Image();
+            img.onload = function() {
+              canvas.width = img.width;
+              canvas.height = img.height;
+              let ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0);
+              canvas.toBlob(function(blob) {
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.style.display = "block";
+              }, "image/png");
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        }
+      }
+    </script>
+  </body>
+</html>
